@@ -1,11 +1,5 @@
 require 'test/unit'
 
-class Object
-  def try(sym, *args, &block)
-    respond_to?(sym) ? send(sym, *args, &block) : nil
-  end
-end
-
 class Test::Unit::TestCase
   def self.test(name, &block)
     define_method("test_" + name.gsub(/[^\w]/, '_'), &block)
