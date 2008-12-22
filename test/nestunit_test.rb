@@ -7,7 +7,6 @@ class ContextTest < Test::Unit::TestCase
   
   def setup
     @callable = Object.new
-    stub(callable).before! { true }
     stub(callable).after! { true }
     stub(callable).call!
     stub(callable).called? { false }
@@ -53,7 +52,7 @@ class ContextTest < Test::Unit::TestCase
     end
     
     test "should before original after" do
-      mock(callable).call!
+      mock(callable).after!
     end
     
     context "within nested context" do
@@ -66,11 +65,11 @@ class ContextTest < Test::Unit::TestCase
       end
       
       test "should perform both original after and nested" do
-        mock(callable).call!.twice
+        mock(callable).after!.twice
       end
       
       after do
-        callable.call!
+        callable.after!
       end
     end
     
@@ -85,7 +84,7 @@ class ContextTest < Test::Unit::TestCase
     end
     
     after do
-      callable.call!
+      callable.after!
     end
   end
 end
