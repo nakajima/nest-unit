@@ -1,3 +1,58 @@
 h1. nest-unit
 
+Simple nested contexts for Test::Unit.
+
+h3. Usage
+
+<pre>
+class FooTest < Test::Unit::TestCase
+
+  test "should be true" do
+    assert true
+  end
+  
+  context "when there is a thing" do
+    before do
+      @thing = Object.new
+    end
+    
+    test "bar-ing" do
+      assert Foo.bar(@thing)
+    end
+    
+    test "fizz-ing" do
+      assert Foo.fizz(@thing)
+    end
+    
+    context "when there are two things" do
+      before do
+        @another_thing = Object.new
+      end
+      
+      test "bar-ing" do
+        assert Foo.bar(@thing, @another_thing)
+      end
+      
+      test "fizz-ing" do
+        assert Foo.fizz(@thing, @another_thing)
+      end
+      
+      after do
+        Foo.some_more_cleanup!
+      end
+    end
+    
+    after do
+      Foo.cleanup!
+    end
+  end
+end
+</pre>
+
+h3. Note
+
+You must use the @test@ helper. Tests defined with the usual
+@def test_*@ don't work yet. I need to hook up some @method_added@
+juice or something.
+
 (c) Copyright 2008 Pat Nakajima, released under MIT License.
