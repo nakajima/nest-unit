@@ -11,13 +11,69 @@ class ContextTest < Test::Unit::TestCase
     stub(callable).call!
     stub(callable).called? { false }
   end
-
+  
+  helper :helped? do
+    true
+  end
+  
   test "has test helper" do
     assert true
   end
   
   test "doesn't have before" do
     assert !callable.called?
+  end
+  
+  test "has helper helper" do
+    assert helped?
+  end
+  
+  context "with a helper method" do
+    helper :overrideable do
+      :outside
+    end
+    
+    helper :do_something do
+      :ok
+    end
+    
+    helper :returner do |arg|
+      arg
+    end
+    
+    test "can access top level helper methods" do
+      assert helped?
+    end
+    
+    test "can access helper methods" do
+      assert_equal :ok, do_something
+    end
+    
+    test "can take a block" do
+      assert_equal :ok, returner(:ok)
+    end
+    
+    context "with an inner helper method" do
+      helper :overrideable do
+        :inside
+      end
+      
+      helper :do_something_else do
+        :also_ok
+      end
+      
+      test "can access helper methods" do
+        assert_equal :also_ok, do_something_else
+      end
+      
+      test "can override helpers" do
+        assert_equal :inside, overrideable
+      end
+      
+      test "can access outer helper methods" do
+        assert_equal [:ok, :also_ok], [do_something, do_something_else]
+      end
+    end
   end
 
   context "within a context block" do

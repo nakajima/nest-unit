@@ -5,11 +5,19 @@ class Test::Unit::TestCase
     define_method("test_" + name.gsub(/[^\w]/, '_'), &block)
   end unless respond_to?(:test)
   
+  def self.helper(name, &block)
+    define_method(name, &block)
+  end unless respond_to?(:helper)
+  
   class Context
     attr_reader :parent_context
     
     def initialize(test_case, name, parent_context=nil)
       @test_case, @name, @parent_context = test_case, name, parent_context
+    end
+    
+    def helper(name, &block)
+      define_method(name, &block)
     end
     
     def before(&block)
@@ -43,6 +51,10 @@ class Test::Unit::TestCase
         instance_eval(&block)
         context.run_callback(:after, self)
       end
+    end
+    
+    def method_missing(sym, *args,  &block)
+      @test_case.send(sym, *args, &block)
     end
     
     private
