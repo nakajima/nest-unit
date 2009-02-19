@@ -16,6 +16,14 @@ class ContextTest < Test::Unit::TestCase
     true
   end
   
+  helper :double do |x|
+    x * 2
+  end
+
+  test "should be double" do
+    assert_equal 4, double(2)
+  end
+  
   test "has test helper" do
     assert true
   end
