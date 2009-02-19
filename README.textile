@@ -5,6 +5,9 @@ Simple nested contexts for Test::Unit.
 h3. Usage
 
 <pre>
+require 'test/unit'
+require 'nest-unit'
+
 class FooTest < Test::Unit::TestCase
 
   test "should be true" do
@@ -45,6 +48,23 @@ class FooTest < Test::Unit::TestCase
     after do
       Foo.cleanup!
     end
+  end
+end
+</pre>
+
+h3. Helper Methods
+
+If you need to define helper methods for your tests, use the @helper@ helper:
+
+<pre>
+class FooTest < Test::Unit::TestCase
+
+  helper :double do |x|
+    x * 2
+  end
+
+  test "should be double" do
+    assert_equal 4, double(2)
   end
 end
 </pre>
