@@ -2,7 +2,7 @@ require 'test/unit'
 
 class Test::Unit::TestCase
   def self.test(name, &block)
-    define_method("test_" + name.gsub(/[^\w]/, '_'), &block)
+    define_method("test_" + name.gsub(/\W/, '_'), &block)
   end unless respond_to?(:test)
 
   def self.helper(name, &block)
